@@ -1,6 +1,6 @@
 # esx_vehicle_location
 
-[Click here to read this document in French.](https://github.com/ESX-FRANCE/esx_vehicle_location/wiki/README---Fran%C3%A7ais)
+[Click here to read this document in French.](https://github.com/ESX-FRANCE/esx_vehicle_location/wiki/README--Fran%C3%A7ais)
 
 ## Requirements
 * [es_extended](https://github.com/ESX-Org/es_extended)
