@@ -72,19 +72,19 @@ function GetAvailableVehicleSpawnPoint()
     local spawnPoints = Config.Vehicles.SpawnPoints
     local found, foundSpawnPoint = false, nil
     
-	for i=1, #spawnPoints, 1 do
-		if ESX.Game.IsSpawnPointClear(spawnPoints[i].coords, spawnPoints[i].radius) then
-			found, foundSpawnPoint = true, spawnPoints[i]
-			break
-		end
-	end
+    for i=1, #spawnPoints, 1 do
+        if ESX.Game.IsSpawnPointClear(spawnPoints[i].coords, spawnPoints[i].radius) then
+            found, foundSpawnPoint = true, spawnPoints[i]
+            break
+        end
+    end
 
-	if found then
-		return true, foundSpawnPoint
-	else
-		ESX.ShowNotification(_U('vehicle_blocked'))
-		return false
-	end
+    if found then
+        return true, foundSpawnPoint
+    else
+        ESX.ShowNotification(_U('vehicle_blocked'))
+        return false
+    end
 end
 
 AddEventHandler('esx_vehicle_location:hasEnteredMarker', function(zone)
@@ -119,18 +119,18 @@ Citizen.CreateThread(function()
         end
 
         if (isInMarker and not hasAlreadyEnteredMarker) or (isInMarker and lastZone ~= currentZone) then
-			hasAlreadyEnteredMarker, lastZone = true, currentZone
-			TriggerEvent('esx_vehicle_location:hasEnteredMarker', currentZone)
-		end
+	    hasAlreadyEnteredMarker, lastZone = true, currentZone
+	    TriggerEvent('esx_vehicle_location:hasEnteredMarker', currentZone)
+	end
 
         if not isInMarker and hasAlreadyEnteredMarker then
-			hasAlreadyEnteredMarker = false
-			TriggerEvent('esx_vehicle_location:hasExitedMarker', lastZone)
-		end
+	    hasAlreadyEnteredMarker = false
+	    TriggerEvent('esx_vehicle_location:hasExitedMarker', lastZone)
+	end
 
-		if letSleep then
-			Citizen.Wait(500)
-		end
+	if letSleep then
+	    Citizen.Wait(500)
+	end
     end
 end)
 
