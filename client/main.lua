@@ -1,5 +1,5 @@
 local hasAlreadyEnteredMarker, currentActionData = false, {}
-local lastZone, currentAction, currentActionMsg
+local lastZone, currentAction, currentActionMsg, vehiclePart
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -9,16 +9,18 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function OpenVehicleLocationMenu()
+function OpenVehicleLocationMenu(object)
     local elements = {}
 
-    for k,vehicle in ipairs(Config.Location) do
-        table.insert(elements, {
-            label = ('%s - <span style="color:green;">%s</span>'):format(vehicle.label, _U('vehicle_item', ESX.Math.GroupDigits(vehicle.price))),
-            name = vehicle.label,
-            model = vehicle.model,
-            price = vehicle.price
-        })
+    for k,v in ipairs(Config.Locations.Vehicles) do
+        for i=1, #v.Models, 1 do
+            table.insert(elements, {
+                label = ('%s - <span style="color:green;">%s</span>'):format(v.Models[i].label, _U('vehicle_item', ESX.Math.GroupDigits(v.Models[i].price))),
+                name = v.Models[i].label,
+                model = v.Models[i].model,
+                price = v.Models[i].price
+            })
+        end
     end
 
     ESX.UI.Menu.CloseAll()
@@ -37,7 +39,7 @@ function OpenVehicleLocationMenu()
             }
         }, function(subData, subMenu)
             if subData.current.value == 'yes' then
-                local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint()
+                local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(object)
 
                 ESX.TriggerServerCallback('esx_vehicle_location:buy', function(bought)
                     if bought then
@@ -62,34 +64,33 @@ function OpenVehicleLocationMenu()
     end, function(data, menu)
         menu.close()
 
-        currentAction     = 'location_menu'
-        currentActionMsg  = _U('open_location_menu')
+        currentAction = 'location_menu'
+        currentActionMsg = _U('open_location_menu')
         currentActionData = {}
     end)
 end
 
-function GetAvailableVehicleSpawnPoint()
-    local spawnPoints = Config.Vehicles.SpawnPoints
+function GetAvailableVehicleSpawnPoint(object)
     local found, foundSpawnPoint = false, nil
     
-    for i=1, #spawnPoints, 1 do
-        if ESX.Game.IsSpawnPointClear(spawnPoints[i].coords, spawnPoints[i].radius) then
-            found, foundSpawnPoint = true, spawnPoints[i]
-            break
-        end
-    end
+	for i=1, #object.SpawnPoints, 1 do
+		if ESX.Game.IsSpawnPointClear(object.SpawnPoints[i].coords, object.SpawnPoints[i].radius) then
+			found, foundSpawnPoint = true, object.SpawnPoints[i]
+			break
+		end
+	end
 
-    if found then
-        return true, foundSpawnPoint
-    else
-        ESX.ShowNotification(_U('vehicle_blocked'))
-        return false
-    end
+	if found then
+		return true, foundSpawnPoint
+	else
+		ESX.ShowNotification(_U('vehicle_blocked'))
+		return false
+	end
 end
 
 AddEventHandler('esx_vehicle_location:hasEnteredMarker', function(zone)
-    currentAction     = 'location_menu'
-    currentActionMsg  = _U('open_location_menu')
+    currentAction = 'location_menu'
+    currentActionMsg = _U('open_location_menu')
     currentActionData = {}
 end)
 
@@ -98,39 +99,54 @@ AddEventHandler('esx_vehicle_location:hasExitedMarker', function(zone)
     currentAction = nil
 end)
 
+-- Create blip
+Citizen.CreateThread(function()
+    local blip = AddBlipForCoord(Config.Locations.Blip.Coords)
+
+    SetBlipSprite(blip, Config.Locations.Blip.Sprite)
+    SetBlipDisplay(blip, Config.Locations.Blip.Display)
+    SetBlipScale(blip, Config.Locations.Blip.Scale)
+    SetBlipColour(blip, Config.Locations.Blip.Color)
+    SetBlipAsShortRange(blip, true)
+
+    BeginTextCommandSetBlipName('STRING')
+    AddTextComponentString(_U('map_blip'))
+    EndTextCommandSetBlipName(blip)
+end)
+
 -- Enter / Exit marker events & draw markers
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
 
-        local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), false, nil, true
+        local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), nil, nil, true
 
-        for k,v in pairs(Config.Vehicles.Spawner) do
-            local distance = #(playerCoords - v)
+        for k,v in pairs(Config.Locations.Vehicles) do
+            local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
 
             if distance < Config.DrawDistance then
+                DrawMarker(Config.MarkerType, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
                 letSleep = false
-                DrawMarker(Config.MarkerType, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-                
-                if distance < Config.MarkerSize.x then
-                    isInMarker, currentZone = true, k
-                end
+            end
+
+            if distance < Config.MarkerSize.x then
+                isInMarker, currentZone, vehiclePart = true, k, v
             end
         end
 
         if (isInMarker and not hasAlreadyEnteredMarker) or (isInMarker and lastZone ~= currentZone) then
-	    hasAlreadyEnteredMarker, lastZone = true, currentZone
-	    TriggerEvent('esx_vehicle_location:hasEnteredMarker', currentZone)
-	end
+			hasAlreadyEnteredMarker, lastZone = true, currentZone
+			TriggerEvent('esx_vehicle_location:hasEnteredMarker', currentZone)
+		end
 
         if not isInMarker and hasAlreadyEnteredMarker then
-	    hasAlreadyEnteredMarker = false
-	    TriggerEvent('esx_vehicle_location:hasExitedMarker', lastZone)
-	end
+			hasAlreadyEnteredMarker = false
+			TriggerEvent('esx_vehicle_location:hasExitedMarker', lastZone)
+		end
 
-	if letSleep then
-	    Citizen.Wait(500)
-	end
+		if letSleep then
+			Citizen.Wait(500)
+		end
     end
 end)
 
@@ -144,7 +160,7 @@ Citizen.CreateThread(function()
 
             if IsControlJustReleased(0, 38) then
                 if currentAction == 'location_menu' then
-                    OpenVehicleLocationMenu()
+                    OpenVehicleLocationMenu(vehiclePart)
                 end
 
                 currentAction = nil
@@ -152,22 +168,5 @@ Citizen.CreateThread(function()
         else
             Citizen.Wait(500)
         end
-    end
-end)
-
--- Create blip
-Citizen.CreateThread(function()
-    for k,v in pairs(Config.Blip) do
-        local blip = AddBlipForCoord(v.Coords)
-
-        SetBlipSprite (blip, v.Sprite)
-        SetBlipDisplay(blip, 4)
-        SetBlipScale  (blip, v.Scale)
-        SetBlipColour (blip, v.Color)
-        SetBlipAsShortRange(blip, true)
-
-        BeginTextCommandSetBlipName('STRING')
-        AddTextComponentString(_U('map_blip'))
-        EndTextCommandSetBlipName(blip)
     end
 end)
