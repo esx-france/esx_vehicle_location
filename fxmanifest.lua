@@ -1,4 +1,7 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+fx_version 'adamant'
+game 'gta5'
+
+name 'ESX Vehicle Location'
 description 'This script allows you to rent vehicles to the newcomer for example at the airport of your city.'
 website 'https://github.com/ESX-FRANCE/esx_vehicle_location'
 version '0.0.2'
