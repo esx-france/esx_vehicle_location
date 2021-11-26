@@ -22,7 +22,7 @@ git clone https://github.com/ESX-FRANCE/esx_vehicle_location [esx]/esx_vehicle_l
 * Put it in your server resources folder.
 
 ## Installation
-* Add ``start esx_vehicle_location`` in the **server.cfg** file.
+* Add ``ensure esx_vehicle_location`` in the **server.cfg** file.
 
 ## Legal
 ### License
