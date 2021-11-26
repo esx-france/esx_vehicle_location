@@ -2,7 +2,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-ESX.RegisterServerCallback('esx_vehicle_location:buy', function(source, cb, price)
+ESX.RegisterServerCallback('esx:vehicle_location:buy', function(source, cb, price)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer.getMoney() >= price then
