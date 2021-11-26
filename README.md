@@ -14,11 +14,11 @@ fvm install --save --folder=esx esx-france/esx_vehicle_location
 ### Using [git](https://git-scm.com/)
 ```
 cd resources
-git clone https://github.com/ESX-FRANCE/esx_vehicle_location [esx]/esx_vehicle_location
+git clone https://github.com/esx-france/esx_vehicle_location [esx]/esx_vehicle_location
 ```
 
 ### Manually
-* [Download](https://github.com/ESX-FRANCE/esx_vehicle_location/archive/master.zip)
+* [Download](https://github.com/esx-france/esx_vehicle_location/archive/master.zip)
 * Put it in your server resources folder.
 
 ## Installation
@@ -28,7 +28,7 @@ git clone https://github.com/ESX-FRANCE/esx_vehicle_location [esx]/esx_vehicle_l
 ### License
 esx_vehicle_location - vehicle location script for ESX
 
-Copyright (C) 2018-2019 keketiger
+Copyright (C) 2018-2021 keketiger
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
