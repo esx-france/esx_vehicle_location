@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 name 'ESX Vehicle Location'
-description 'This script allows you to rent vehicles to the newcomer for example at the airport of your city.'
+description 'Allow vehicle rental to the new player. Example: at the airport.'
 website 'https://github.com/ESX-FRANCE/esx_vehicle_location'
 version '1.0.0'
 author 'keketiger'
