@@ -7,12 +7,7 @@ website 'https://github.com/ESX-FRANCE/esx_vehicle_location'
 version '1.0.0'
 author 'keketiger'
 
-server_scripts {
-    '@es_extended/locale.lua',
-    'locales/en.lua',
-    'locales/fr.lua',
-    'server/main.lua'
-}
+server_script 'server/main.lua'
 
 client_scripts {
     '@es_extended/locale.lua',
