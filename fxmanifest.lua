@@ -1,10 +1,10 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 game 'gta5'
 
 name 'ESX Vehicle Location'
 description 'This script allows you to rent vehicles to the newcomer for example at the airport of your city.'
 website 'https://github.com/ESX-FRANCE/esx_vehicle_location'
-version '0.0.2'
+version '1.0.0'
 author 'keketiger'
 
 server_scripts {
@@ -22,6 +22,4 @@ client_scripts {
     'client/main.lua'
 }
 
-dependencies {
-    'es_extended'
-}
+dependency 'es_extended'
