@@ -98,7 +98,7 @@ end)
 -- Create blip
 Citizen.CreateThread(function()
     for i=1, #Config.Locations do
-        local blip = AddBlipForCoord(Config.Locations[i].Blip)
+        local blip = AddBlipForCoord(Config.Locations[i].Spawner)
 
         SetBlipSprite(blip, Config.Blip.Sprite)
         SetBlipDisplay(blip, Config.Blip.Display)
