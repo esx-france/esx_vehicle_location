@@ -1,23 +1,19 @@
-Config = {}
+Config = {
+    Locale = 'fr',
 
-Config.DrawDistance = 100.0
-Config.MarkerType   = 36
-Config.MarkerSize   = { x = 1.5, y = 1.5, z = 1.0 }
-Config.MarkerColor  = { r = 255, g = 255, b = 255 }
-
-Config.Locale = 'fr'
-
-Config.Locations = {
+    DrawDistance = 10.0,
+    MarkerType   = 36,
+    MarkerSize   = { x = 1.0, y = 1.0, z = 1.0 },
+    MarkerColor  = { r = 255, g = 255, b = 255 },
 
     Blip = {
-        Coords  = vector3(-1035.2, -2732.8, 20.1),
         Sprite  = 171,
         Display = 4,
         Scale   = 1.0,
         Color   = 5
     },
 
-    Vehicles = {
+    Locations = {
         {
             Spawner = vector3(-1035.2, -2732.8, 20.1),
             SpawnPoints = {
